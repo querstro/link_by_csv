@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Drive CSV to Table</title>
+</head>
+<body>
+  <h1>Google Drive CSV 데이터를 HTML 표로 표시</h1>
+  <table id="csvTable" border="1">
+    <thead>
+      <tr></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    // 구글 드라이브 CSV 파일 링크 (변환된 다운로드 링크 사용)1bc9gJgzAl22GJZ2E0PDeOUwNFkM571C2
+    const csvUrl = "https://drive.google.com/uc?export=download&id=1bc9gJgzAl22GJZ2E0PDeOUwNFkM571C2";
+
+    async function fetchCSV(url) {
+      try {
+        const response = await fetch(url);
+        const data = await response.text();
+        createTable(data);
+      } catch (error) {
+        console.error("CSV 데이터를 가져오는 중 오류 발생:", error);
+      }
+    }
+
+    function createTable(csvData) {
+      const rows = csvData.split("\n");
+      const table = document.getElementById("csvTable");
+
+      // 헤더 생성
+      const headers = rows[0].split(",");
+      const theadRow = table.querySelector("thead tr");
+      headers.forEach(header => {
+        const th = document.createElement("th");
+        th.textContent = header.trim();
+        theadRow.appendChild(th);
+      });
+
+      // 본문 생성
+      const tbody = table.querySelector("tbody");
+      rows.slice(1).forEach(row => {
+        if (row.trim() === "") return; // 빈 행 건너뛰기
+        const tr = document.createElement("tr");
+        row.split(",").forEach(cell => {
+          const td = document.createElement("td");
+          td.textContent = cell.trim();
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+
+    // CSV 데이터 불러오기
+    fetchCSV(csvUrl);
+  </script>
+</body>
