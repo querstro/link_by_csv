@@ -23,7 +23,8 @@
         const response = await fetch(url);
         const data = await response.text();
         createTable(data);
-      } catch (error) {
+      } 
+      catch (error) {
         console.error("CSV 데이터를 가져오는 중 오류 발생:", error);
       }
     }
